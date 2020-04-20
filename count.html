@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>counter</title>
+	<link rel="stylesheet" type="text/css" href="mystyle.css">
+	<!--<script src="myscript.js" charset="utf-8"></script>-->
+</head>
+
+<body>
+	<div class="top">
+    <div><img src="assets/deltaLogoGreen.png" height= "150"></div>
+		<div class="text"> <center><button id = "new" onclick=newgame() >NEW GAME</button></center><center> <br><br>click the numbers from 1 to 40 in ascending order</center></div>
+		<div class="timer">  <center> timer:<br><span id="score"></span></center></div>
+		<div class="high"> <center> high scores:<span id="high"></span></center></div>
+	</div>
+	<br>
+	<br>
+	<br>
+	<div class="playarea">
+		<button onclick= fun(1) ><div id="1" class="plate">0</div></button>
+		<button onclick= fun(2) ><div id="2" class="plate">0</div></button>
+		<button onclick= fun(3) ><div id="3" class="plate">0</div></button>
+		<button onclick= fun(4) ><div id="4" class="plate">0</div></button>
+		<button onclick= fun(5) ><div id="5" class="plate">0</div></button>
+		<button onclick= fun(6) ><div id="6" class="plate">0</div></button>
+		<button onclick= fun(7) ><div id="7" class="plate">0</div></button>
+		<button onclick= fun(8) ><div id="8" class="plate">0</div></button>
+		<button onclick= fun(9) ><div id="9" class="plate">0</div></button>
+		<button onclick= fun(10) ><div id="10" class="plate">0</div></button>
+		<button onclick= fun(11) ><div id="11" class="plate">0</div></button>
+		<button onclick= fun(12) ><div id="12" class="plate">0</div></button>
+		<button onclick= fun(13) ><div id="13" class="plate">0</div></button>
+		<button onclick= fun(14) ><div id="14" class="plate">0</div></button>
+		<button onclick= fun(15) ><div id="15" class="plate">0</div></button>
+		<button onclick= fun(16) ><div id="16" class="plate">0</div></button>
+	</div>
+
+	<script type="text/javascript">
+        var arr = [4,3,2,1,5,6,7,8,9,10,11,12,13,14,15,16]
+        var ar  = [1000,0]
+        var array = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        var arrr = {
+          "one" : "1000",
+          "two" : "1000",
+          "three" : "1000",
+          "four" : "1000",
+          "five" : "1000"
+        }
+        var imparr = [1000,1000,1000,1000,1000,1000]
+        var maxid = 15
+        var minid = 0
+        const plate = document.getElementsByClassName('plate')
+        const time = document.querySelector('.timer')
+        var count = 0
+        var key = 0
+
+    function newgame() {
+        arr = [4,3,2,1,5,6,7,8,9,10,11,12,13,14,15,16];
+        ar = [1000,0];
+        count = 0;
+        key++;
+
+        //shuffle the array
+        for(let i=arr.length-1;i>0; i--)
+        {
+          let j = Math.floor(Math.random() * (i+1));
+            [arr[i],arr[j]] = [arr[j],arr[i]];
+        }
+        
+        for(let i=0; i<arr.length;i++)
+        {
+          plate[i].innerHTML = arr[i];
+        }
+
+        //find max and min elements and their ids
+        for(let i=0;i<arr.length; i++){
+          if(arr[i]<ar[0]){
+            ar[0] = arr[i];
+            minid = i;
+          }
+          if(arr[i]>ar[1]){
+            ar[1] = arr[i];
+            maxid = i;
+          }
+        }
+
+
+        document.getElementById('score').innerHTML = count
+        clearInterval(t);
+        t = setInterval(timer,1000);
+        var g = localStorage.getItem("cvv");
+        array.sort(function(a,b){return b-a});
+        arrr = JSON.parse(localStorage.getItem("btech"));
+        document.getElementById('high').innerHTML = "<br>" + arrr.one + "<br>" + arrr.two + "<br>" + arrr.three + "<br>" + arrr.four + "<br>" + arrr.five;
+
+
+    }
+
+
+        function fun(ele) { 
+
+        	const p=document.getElementById(ele);
+       	    /*alert(ar[0]);
+       	    alert(ar[1]);
+       	    alert(p.id);
+       	    const v = p.id;
+       	    alert(arr[v-1]);*/
+       	    const v = p.id;
+       	    if (arr[v-1]==ar[0]) {
+       	    	ar[1]++;
+       	    	ar[0]++;
+       	    	if (ar[1]==56) {
+       	    		p.innerHTML = " ";
+       	    		arr[v-1] = " ";
+       	    		alert("Your score is "+count);
+       	    		stoptime();
+                arrr = JSON.parse(localStorage.getItem("btech"));
+                imparr[0] = arrr.one;
+                imparr[1] = arrr.two;
+                imparr[2] = arrr.three;
+                imparr[3] = arrr.four;
+                imparr[4] = arrr.five;
+                imparr[5] = count;
+                imparr.sort(function(a,b){return a-b});
+                arrr.five = imparr[4];
+                arrr.four = imparr[3];
+                arrr.three = imparr[2];
+                arrr.two = imparr[1];
+                arrr.one = imparr[0];
+                localStorage.setItem("btech",JSON.stringify(arrr));
+                array[key] = count;
+
+       	    	}
+       	    	else if (ar[1]>40) {
+       	    		p.innerHTML = " ";
+       	    		arr[v-1] = " ";
+       	    	}
+       	    	else {
+       	    		p.innerHTML = ar[1];
+       	    		arr[v-1] = ar[1];
+       	    	}
+       	    	
+       	    }
+        }
+
+        function timer() {
+        	count++;
+        	document.getElementById('score').innerHTML = count;
+          
+
+        }
+
+        function stoptime() {
+        	clearInterval(t);
+        }
+
+        var t = setInterval(timer,1000);
+
+	</script>
+
+
+</body>
+
+</html>
